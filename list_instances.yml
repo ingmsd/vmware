@@ -1,0 +1,8 @@
+- hosts: all
+  user: root
+  gather_facts: False
+  tasks:
+    - debug: msg="{{ inventory_hostname + ' ' + ansible_ssh_host + ' ' + vmware_uuid }}"
+    - ping:
+
+

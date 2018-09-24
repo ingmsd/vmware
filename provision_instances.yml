@@ -1,0 +1,30 @@
+- name: set basic configuration on newly created guests
+  hosts: all
+  user: root
+  gather_facts: False
+  tasks:
+
+    #- debug: var=hostvars
+
+    - name: show host information
+      debug: 
+        msg: "{{ inventory_hostname + ' ' + ansible_ssh_host + ' ' + vmware_uuid }}"
+
+    - name: install libselinux
+      yum: name=libselinux-python state=present
+
+    - name: install epel
+      yum: name=epel-release state=present
+
+    - name: install nginx
+      yum: name=nginx state=present
+
+    - name: set the hostname to match the guest name
+      hostname_set: 
+        name: "{{ inventory_hostname }}"
+      register: hostcheck
+
+    - name: reboot if hostname changed
+      reboot:
+      when: hostcheck.changed
+
